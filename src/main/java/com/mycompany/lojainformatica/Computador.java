@@ -22,6 +22,12 @@ public class Computador {
         this.processador = processador;
     }
 
+    public Computador(int IdComputador, String HD, String processador) {
+        this.IdComputador = IdComputador;
+        this.HD = HD;
+        this.processador = processador;
+    }
+    
     public int getIdComputador() {
         return IdComputador;
     }
