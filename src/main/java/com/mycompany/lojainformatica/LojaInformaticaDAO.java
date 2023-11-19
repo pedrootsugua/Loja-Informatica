@@ -113,4 +113,47 @@ public class LojaInformaticaDAO {
 
         return lista;
     }
+
+    public static boolean alterar (Computador computadorAlterar) {
+
+        boolean retorno = false;
+        Connection conexao = null;
+        PreparedStatement comandoSQL = null;
+
+        try {
+            //carregar o driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //abrir a conexão com o banco
+            conexao = DriverManager.getConnection(url, login, senha);
+
+            //preparar comando SQL a ser executado
+            comandoSQL = conexao.prepareStatement("UPDATE Computador SET HD = ?, processador = ? WHERE idComputador = ?");
+            comandoSQL.setString(1, computadorAlterar.getHD());
+            comandoSQL.setString(2, computadorAlterar.getProcessador());
+            comandoSQL.setInt(3, computadorAlterar.getIdComputador());
+
+            //executar o comando SQL
+            int linhasAfetadas = comandoSQL.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                retorno = true;
+            }
+
+        } catch (ClassNotFoundException ex) {
+            retorno = false;
+        } catch (SQLException ex) {
+            retorno = false;
+        } finally {
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LojaInformaticaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return retorno;
+    }
 }

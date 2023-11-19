@@ -58,7 +58,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnAdicionar.setBackground(new java.awt.Color(153, 255, 102));
+        btnAdicionar.setBackground(new java.awt.Color(102, 255, 102));
         btnAdicionar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAdicionar.setForeground(new java.awt.Color(0, 0, 0));
         btnAdicionar.setText("Adicionar");
@@ -74,6 +74,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnAtualizar.setForeground(new java.awt.Color(0, 0, 0));
         btnAtualizar.setText("Atualizar");
         btnAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setBackground(new java.awt.Color(255, 102, 102));
         btnExcluir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -181,6 +186,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+       
+        //Resgatar dados da linha da tabela e passar para o objeto
+        int linhaSelecionada = jTable1.getSelectedRow();
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        
+        int idSelecionado = Integer.parseInt(modelo.getValueAt(linhaSelecionada, 0).toString());
+        String hdSelecionado = modelo.getValueAt(linhaSelecionada, 2).toString();
+        String processadorSelecionado = modelo.getValueAt(linhaSelecionada, 3).toString();
+        
+        Computador objAlterar = new Computador(idSelecionado, hdSelecionado, processadorSelecionado);
+        
+        //passar o objeto para a tela de alteração 
+        TelaCadastro telaAlteracao = new TelaCadastro(objAlterar);
+        telaAlteracao.setVisible(true);
+        
+    }//GEN-LAST:event_btnAtualizarActionPerformed
 
     /**
      * @param args the command line arguments
