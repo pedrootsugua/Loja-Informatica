@@ -4,6 +4,8 @@
  */
 package com.mycompany.lojainformatica;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author pedro
@@ -44,6 +46,11 @@ public class TelaCadastro extends javax.swing.JFrame {
         btnSalvar.setForeground(new java.awt.Color(0, 0, 0));
         btnSalvar.setText("Salvar");
         btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -118,6 +125,23 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        
+        String HD = txtHD.getText();
+        String processador = txtProcessador.getText();
+        
+        Computador novoComputador = new Computador(HD, processador);
+        
+        //chamar a DAO
+        boolean retorno = LojaInformaticaDAO.salvar(novoComputador);
+        
+        if(retorno == true) {
+            JOptionPane.showMessageDialog(rootPane, "Sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Falha!");
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
      * @param args the command line arguments

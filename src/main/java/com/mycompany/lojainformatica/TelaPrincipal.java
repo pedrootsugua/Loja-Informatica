@@ -4,6 +4,9 @@
  */
 package com.mycompany.lojainformatica;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author pedro
@@ -49,6 +52,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnBuscar.setForeground(new java.awt.Color(0, 0, 0));
         btnBuscar.setText("Buscar");
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnAdicionar.setBackground(new java.awt.Color(153, 255, 102));
         btnAdicionar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -153,6 +161,26 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaCadastro tela = new TelaCadastro();
         tela.setVisible(true);
     }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // chamar a DAO
+        ArrayList<Computador> lista = LojaInformaticaDAO.listar();
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+        
+        //adicionar na tabela cada item da lista retornada 
+        for (Computador item : lista) {
+            modelo.addRow(new String[] {
+                                    String.valueOf(item.getIdComputador()),
+                                    String.valueOf(item.getMarca()),
+                                    String.valueOf(item.getHD()),
+                                    String.valueOf(item.getProcessador())
+            });
+        }
+        
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
