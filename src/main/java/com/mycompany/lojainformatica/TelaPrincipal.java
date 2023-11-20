@@ -5,6 +5,7 @@
 package com.mycompany.lojainformatica;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -85,6 +86,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnExcluir.setForeground(new java.awt.Color(0, 0, 0));
         btnExcluir.setText("Excluir");
         btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -162,49 +168,95 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        
+
         TelaCadastro tela = new TelaCadastro();
         tela.setVisible(true);
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // chamar a DAO
-        ArrayList<Computador> lista = LojaInformaticaDAO.listar();
-        
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        modelo.setRowCount(0);
-        
-        //adicionar na tabela cada item da lista retornada 
-        for (Computador item : lista) {
-            modelo.addRow(new String[] {
-                                    String.valueOf(item.getIdComputador()),
-                                    String.valueOf(item.getMarca()),
-                                    String.valueOf(item.getHD()),
-                                    String.valueOf(item.getProcessador())
-            });
+
+        if (txtBuscar.getText().trim().equals("")) {
+            recarregarTabela();
+        } else {
+            String processadorBuscar = txtBuscar.getText();
+
+            //chamar o metodo na DAO para fazer a busca
+            ArrayList<Computador> lista = LojaInformaticaDAO.buscarPorProcessador(processadorBuscar);
+
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setRowCount(0);
+
+            //adicionar na tabela cada item da lista retornada 
+            for (Computador item : lista) {
+                modelo.addRow(new String[]{
+                    String.valueOf(item.getIdComputador()),
+                    String.valueOf(item.getMarca()),
+                    String.valueOf(item.getHD()),
+                    String.valueOf(item.getProcessador())
+                });
+            }
         }
-        
-        
+
+
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    public void recarregarTabela() {
+        // chamar a DAO
+        ArrayList<Computador> lista = LojaInformaticaDAO.listar();
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        //adicionar na tabela cada item da lista retornada 
+        for (Computador item : lista) {
+            modelo.addRow(new String[]{
+                String.valueOf(item.getIdComputador()),
+                String.valueOf(item.getMarca()),
+                String.valueOf(item.getHD()),
+                String.valueOf(item.getProcessador())
+            });
+        }
+    }
+
     private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
-       
+
         //Resgatar dados da linha da tabela e passar para o objeto
         int linhaSelecionada = jTable1.getSelectedRow();
-        
+
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        
+
         int idSelecionado = Integer.parseInt(modelo.getValueAt(linhaSelecionada, 0).toString());
         String hdSelecionado = modelo.getValueAt(linhaSelecionada, 2).toString();
         String processadorSelecionado = modelo.getValueAt(linhaSelecionada, 3).toString();
-        
+
         Computador objAlterar = new Computador(idSelecionado, hdSelecionado, processadorSelecionado);
-        
+
         //passar o objeto para a tela de alteração 
         TelaCadastro telaAlteracao = new TelaCadastro(objAlterar);
         telaAlteracao.setVisible(true);
-        
+
     }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+
+        //resgatar o ID da linha selecianada e passar para a DAO
+        int linhaSelecionada = jTable1.getSelectedRow();
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        int idExcluir = Integer.parseInt(modelo.getValueAt(linhaSelecionada, 0).toString());
+
+        //mandar para a DAO
+        boolean retorno = LojaInformaticaDAO.excluir(idExcluir);
+
+        if (retorno == true) {
+            JOptionPane.showMessageDialog(rootPane, "Excluído com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Falha ao excluir!");
+        }
+
+        //atualizar a tabela automaticamente
+        recarregarTabela();
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
