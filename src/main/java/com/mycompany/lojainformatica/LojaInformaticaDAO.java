@@ -113,6 +113,57 @@ public class LojaInformaticaDAO {
 
         return lista;
     }
+    
+    //buscar por processador
+    public static ArrayList<Computador> buscarPorProcessador(String processadorBuscar) {
+
+        ArrayList<Computador> lista = new ArrayList<>();
+
+        Connection conexao = null;
+        PreparedStatement comandoSQL = null;
+        ResultSet rs = null;
+
+        try {
+            //carregar o driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //abrir a conexão com o banco
+            conexao = DriverManager.getConnection(url, login, senha);
+
+            //preparar comando SQL a ser executado
+            comandoSQL = conexao.prepareStatement("SELECT * FROM Computador  WHERE processador = ?");
+            comandoSQL.setString(1, processadorBuscar);
+            
+            //executar o comando SQL
+            rs = comandoSQL.executeQuery();
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Computador item = new Computador();
+                    item.setIdComputador(rs.getInt("idComputador"));
+                    item.setHD(rs.getString("HD"));
+                    item.setProcessador(rs.getString("processador"));
+
+                    lista.add(item);
+                }
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LojaInformaticaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LojaInformaticaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LojaInformaticaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return lista;
+    }
 
     public static boolean alterar (Computador computadorAlterar) {
 
@@ -132,6 +183,47 @@ public class LojaInformaticaDAO {
             comandoSQL.setString(1, computadorAlterar.getHD());
             comandoSQL.setString(2, computadorAlterar.getProcessador());
             comandoSQL.setInt(3, computadorAlterar.getIdComputador());
+
+            //executar o comando SQL
+            int linhasAfetadas = comandoSQL.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                retorno = true;
+            }
+
+        } catch (ClassNotFoundException ex) {
+            retorno = false;
+        } catch (SQLException ex) {
+            retorno = false;
+        } finally {
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LojaInformaticaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return retorno;
+    }
+    
+    public static boolean excluir (int idExcluir) {
+
+        boolean retorno = false;
+        Connection conexao = null;
+        PreparedStatement comandoSQL = null;
+
+        try {
+            //carregar o driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //abrir a conexão com o banco
+            conexao = DriverManager.getConnection(url, login, senha);
+
+            //preparar comando SQL a ser executado
+            comandoSQL = conexao.prepareStatement("DELETE FROM Computador WHERE idComputador = ?");
+            comandoSQL.setInt(1, idExcluir);
 
             //executar o comando SQL
             int linhasAfetadas = comandoSQL.executeUpdate();

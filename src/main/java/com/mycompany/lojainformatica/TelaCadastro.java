@@ -160,7 +160,7 @@ public class TelaCadastro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-
+        
         if (obj == null) {
             //INSERT de dados
             String HD = txtHD.getText();
@@ -176,23 +176,24 @@ public class TelaCadastro extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Falha!");
             }
-            
+
         } else {
             //resgatar os dados alterados e chamar a DAO
             String hdAlterado = txtHD.getText();
             String processadorAlterado = txtProcessador.getText();
-            
-           obj.setHD(hdAlterado);
-           obj.setProcessador(processadorAlterado);
-            
+
+            obj.setHD(hdAlterado);
+            obj.setProcessador(processadorAlterado);
+
             //chamar a DAO
-             boolean retorno = LojaInformaticaDAO.alterar(obj);
+            boolean retorno = LojaInformaticaDAO.alterar(obj);
 
             if (retorno == true) {
                 JOptionPane.showMessageDialog(rootPane, "Sucesso!");
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Falha!");
-            } 
+            }
+
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
